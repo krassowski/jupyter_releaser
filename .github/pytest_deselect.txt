@@ -1,6 +1,14 @@
 # This file contains tests to deselect during bisection for timeout issues
 # Format: one test path per line (e.g., tests/test_cli.py::test_name)
-# Comment out lines to re-enable tests
+# Comment out lines (add # at start) to re-enable tests
+# 
+# HOW TO USE:
+# 1. All tests below are currently DISABLED (skipped during test runs)
+# 2. To enable tests, comment them out by adding # at the start
+# 3. To disable tests, remove the # from the start
+# 4. See .github/BISECTION_README.md for detailed bisection instructions
+#
+# Current Status: All mock_github tests disabled to identify timeout source
 
 # Tests using mock_github fixture (21 total)
 tests/test_cli.py::test_build_changelog_backport
