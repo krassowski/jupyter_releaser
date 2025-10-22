@@ -54,7 +54,12 @@ jobs:
           if [ -f .github/pytest_deselect.txt ]; then
             DESELECT_ARGS=$(grep -v '^#' .github/pytest_deselect.txt | grep -v '^$' | sed 's/^/--deselect=/' | tr '\n' ' ')
           fi
-          hatch run cov:test -n auto --cov-fail-under 80 $DESELECT_ARGS || hatch run test:test --lf $DESELECT_ARGS
+          # Lower coverage threshold during bisection if tests are deselected
+          COV_THRESHOLD=80
+          if [ -n "$DESELECT_ARGS" ]; then
+            COV_THRESHOLD=60
+          fi
+          hatch run cov:test -n auto --cov-fail-under $COV_THRESHOLD $DESELECT_ARGS || hatch run test:test --lf $DESELECT_ARGS
 
       - name: Run the tests on Windows and MacOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
