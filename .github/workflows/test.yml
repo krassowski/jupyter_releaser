@@ -49,7 +49,12 @@ jobs:
       - name: Run the tests with coverage on Ubuntu
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
-          hatch run cov:test -n auto --cov-fail-under 80 || hatch run test:test --lf
+          # Deselect tests listed in pytest_deselect.txt for bisection
+          DESELECT_ARGS=""
+          if [ -f .github/pytest_deselect.txt ]; then
+            DESELECT_ARGS=$(grep -v '^#' .github/pytest_deselect.txt | grep -v '^$' | sed 's/^/--deselect=/' | tr '\n' ' ')
+          fi
+          hatch run cov:test -n auto --cov-fail-under 80 $DESELECT_ARGS || hatch run test:test --lf $DESELECT_ARGS
 
       - name: Run the tests on Windows and MacOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
