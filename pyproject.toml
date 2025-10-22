@@ -61,6 +61,7 @@ test = [
   "pre-commit",
   "pytest>=7.0",
   "pytest-mock",
+  "pytest-timeout",
   "pytest-xdist[psutil]",
   "uvicorn",
   "ruamel.yaml"
@@ -115,6 +116,7 @@ post-version-spec = "dev"
 minversion = "6.0"
 xfail_strict = true
 log_cli_level = "info"
+timeout = 300
 addopts = [
   "-ra", "--durations=10", "--color=yes", "--doctest-modules",
    "--showlocals", "--strict-markers", "--strict-config",
