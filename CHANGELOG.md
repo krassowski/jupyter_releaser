@@ -2,6 +2,33 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.11.2
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...d570a06955f60a0a22f92ba87614b9be8e73eac1))
+
+### Enhancements made
+
+- Add release_tag as output of finalize-release [#656](https://github.com/jupyter-server/jupyter_releaser/pull/656) ([@Yann-P](https://github.com/Yann-P), [@Carreau](https://github.com/Carreau), [@jtpio](https://github.com/jtpio))
+
+### Maintenance and upkeep improvements
+
+- Pin `fastcore<2` [#661](https://github.com/jupyter-server/jupyter_releaser/pull/661) ([@jtpio](https://github.com/jtpio), [@dlqqq](https://github.com/dlqqq), [@krassowski](https://github.com/krassowski))
+
+### Other merged PRs
+
+- Bump mypy python_version to 3.10 to fix CI [#657](https://github.com/jupyter-server/jupyter_releaser/pull/657) ([@Yann-P](https://github.com/Yann-P), [@Carreau](https://github.com/Carreau), [@claude](https://github.com/claude))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2026-05-07&to=2026-07-09&type=c))
+
+@Carreau ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3ACarreau+updated%3A2026-05-07..2026-07-09&type=Issues)) | @claude ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aclaude+updated%3A2026-05-07..2026-07-09&type=Issues)) | @dlqqq ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adlqqq+updated%3A2026-05-07..2026-07-09&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2026-05-07..2026-07-09&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2026-05-07..2026-07-09&type=Issues)) | @Yann-P ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3AYann-P+updated%3A2026-05-07..2026-07-09&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.11.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...ccf1be13734bc6f3544b77fe87b7ca9652515d3e))
@@ -18,8 +45,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2026-05-04&to=2026-05-07&type=c))
 
 @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2026-05-04..2026-05-07&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2026-05-04..2026-05-07&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.11.0
 
