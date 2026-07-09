@@ -367,29 +367,13 @@ def test_get_config_file(git_repo):
 
 def test_get_latest_draft_release(mock_github):
     gh = GhApi(owner="foo", repo="bar", sync=True)
-    gh.create_release(
-        "v1.0.0",
-        "main",
-        "v1.0.0",
-        "body",
-        True,
-        True,
-        files=[],
-    )
+    util.create_release(gh, "v1.0.0", "main", "v1.0.0", "body", True, True, files=[])
     latest = util.latest_draft_release(gh)
     assert latest.name == "v1.0.0"
 
     # Ensure a different timestamp.
     time.sleep(1)
-    gh.create_release(
-        "v1.1.0",
-        "bob",
-        "v1.1.0",
-        "body",
-        True,
-        True,
-        files=[],
-    )
+    util.create_release(gh, "v1.1.0", "bob", "v1.1.0", "body", True, True, files=[])
     latest = util.latest_draft_release(gh)
     assert latest.name == "v1.1.0"
     latest = util.latest_draft_release(gh, "main")

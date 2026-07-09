@@ -3,6 +3,7 @@ import os
 import requests
 from ghapi.core import GhApi
 
+from jupyter_releaser import util
 from jupyter_releaser.mock_github import Asset, Release, load_from_file, write_to_file
 
 
@@ -18,7 +19,8 @@ def test_mock_github(mock_github):
     files = [os.path.join(here, f) for f in os.listdir(here)]
     files = [f for f in files if not os.path.isdir(f)]
 
-    release = gh.create_release(
+    release = util.create_release(
+        gh,
         "v1.0.0",
         "main",
         "v1.0.0",
@@ -50,7 +52,7 @@ def test_mock_github(mock_github):
                 pass
 
     gh.git.create_ref("v1.1.0", "aaaa")
-    tags = gh.list_tags("v1.1.0")
+    tags = util.list_tags(gh, "v1.1.0")
     assert tags[0]["object"]["sha"] == "aaaa"
 
     gh.repos.delete_release(release.id)

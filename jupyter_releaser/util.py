@@ -523,7 +523,7 @@ def upload_assets(gh, assets, release, auth):  # noqa: ARG001
     log(f"Uploading assets: {assets}")
     asset_shas = {}
     for fpath in assets:
-        gh.upload_file(release, fpath)
+        upload_release_asset(release, fpath, auth)
         asset_shas[os.path.basename(fpath)] = compute_sha256(fpath)
 
     # Create an asset_shas file.
@@ -531,9 +531,50 @@ def upload_assets(gh, assets, release, auth):  # noqa: ARG001
         asset_shas_file = os.path.join(td, "asset_shas.json")
         with open(asset_shas_file, "w") as fid:
             json.dump(asset_shas, fid)
-        gh.upload_file(release, asset_shas_file)
+        upload_release_asset(release, asset_shas_file, auth)
 
     return release
+
+
+def upload_release_asset(release, fpath, auth=None):
+    """Upload a single file to a release upload URL."""
+    upload_url = str(release.upload_url).split("{", 1)[0]
+    headers = {"Content-Type": "application/octet-stream"}
+    if auth:
+        headers["Authorization"] = f"token {auth}"
+
+    with open(fpath, "rb") as fid:
+        response = requests.post(
+            upload_url,
+            params={"name": os.path.basename(fpath)},
+            headers=headers,
+            data=fid,
+            timeout=120,
+        )
+    response.raise_for_status()
+
+
+def create_release(gh, tag_name, branch, name, body, draft, prerelease, files=None, auth=None):
+    """Create a release and optionally upload files.
+
+    This avoids ghapi helper methods that became async-only in ghapi>=2.
+    """
+    release = gh.repos.create_release(
+        tag_name,
+        target_commitish=branch,
+        name=name,
+        body=body,
+        draft=draft,
+        prerelease=prerelease,
+    )
+    if files:
+        upload_assets(gh, files, release, auth)
+    return release
+
+
+def list_tags(gh, tag_ref):
+    """List tags using the REST endpoint equivalent used by ghapi helper methods."""
+    return gh.git.list_matching_refs(f"tags/{tag_ref}")
 
 
 def extract_metadata_from_release_url(gh, release_url, auth):
@@ -676,7 +717,7 @@ def get_gh_object(dry_run=False, **kwargs):
     if dry_run:
         ensure_mock_github()
 
-    # ghapi>=2 defaults to async client; this codebase expects sync helpers.
+    # ghapi>=2 defaults to async client.
     kwargs.setdefault("sync", True)
     return core.GhApi(**kwargs)
 

@@ -291,13 +291,13 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
 
 def create_draft_release(ref="bar", files=None):
     gh = GhApi("foo", "bar", sync=True)
-    release = gh.create_release(ref, "bar", ref, "body", True, True)
+    release = util.create_release(gh, ref, "bar", ref, "body", True, True)
     if files:
         with tempfile.TemporaryDirectory() as td:
             metadata_file = os.path.join(td, "metadata.json")
             with open(metadata_file, "w") as fid:
                 fid.write("{}")
-            gh.upload_file(release, metadata_file)
+            util.upload_release_asset(release, metadata_file)
             release = util.release_for_url(gh, release.url)
         util.upload_assets(gh, files, release, "foo")
     return release
