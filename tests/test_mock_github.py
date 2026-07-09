@@ -11,7 +11,7 @@ def test_mock_github(mock_github):
     repo_name = "bar"
     auth = "hi"
 
-    gh = GhApi(owner=owner, repo=repo_name, token=auth)
+    gh = GhApi(owner=owner, repo=repo_name, token=auth, sync=True)
     print(list(gh.repos.list_releases()))
 
     here = os.path.dirname(os.path.abspath(__file__))

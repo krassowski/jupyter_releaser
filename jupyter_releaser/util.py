@@ -676,6 +676,8 @@ def get_gh_object(dry_run=False, **kwargs):
     if dry_run:
         ensure_mock_github()
 
+    # ghapi>=2 defaults to async client; this codebase expects sync helpers.
+    kwargs.setdefault("sync", True)
     return core.GhApi(**kwargs)
 
 

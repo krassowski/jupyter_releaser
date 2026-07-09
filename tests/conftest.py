@@ -253,7 +253,7 @@ def release_metadata():
 
 @pytest.fixture()
 def draft_release(mock_github, release_metadata):
-    gh = GhApi(owner="foo", repo="bar")
+    gh = GhApi(owner="foo", repo="bar", sync=True)
     data = release_metadata
     tag = "v" + data["version"]
 

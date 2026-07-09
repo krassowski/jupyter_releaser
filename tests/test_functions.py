@@ -50,7 +50,7 @@ def test_get_version_npm(npm_package):
 
 
 def test_format_pr_entry(mock_github):
-    gh = GhApi(owner="snuffy", repo="foo")
+    gh = GhApi(owner="snuffy", repo="foo", sync=True)
     info = gh.pulls.create("title", "head", "base", "body", True, False, None)
     resp = changelog.format_pr_entry("snuffy/foo", info["number"], auth="baz")
     assert resp.startswith("- ")
@@ -366,7 +366,7 @@ def test_get_config_file(git_repo):
 
 
 def test_get_latest_draft_release(mock_github):
-    gh = GhApi(owner="foo", repo="bar")
+    gh = GhApi(owner="foo", repo="bar", sync=True)
     gh.create_release(
         "v1.0.0",
         "main",
@@ -412,7 +412,7 @@ def test_parse_release_url():
 
 
 def test_extract_metadata_from_release_url(mock_github, draft_release):
-    gh = GhApi(owner="foo", repo="bar")
+    gh = GhApi(owner="foo", repo="bar", sync=True)
     data = util.extract_metadata_from_release_url(gh, draft_release, "")
     assert os.environ["RH_BRANCH"] == data["branch"]
 

@@ -290,7 +290,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
 
 
 def create_draft_release(ref="bar", files=None):
-    gh = GhApi("foo", "bar")
+    gh = GhApi("foo", "bar", sync=True)
     release = gh.create_release(ref, "bar", ref, "body", True, True)
     if files:
         with tempfile.TemporaryDirectory() as td:
