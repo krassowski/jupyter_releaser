@@ -539,18 +539,18 @@ def upload_assets(gh, assets, release, auth):  # noqa: ARG001
 def upload_release_asset(release, fpath, auth=None):
     """Upload a single file to a release upload URL."""
     upload_url = str(release.upload_url).split("{", 1)[0]
+    payload = Path(fpath).read_bytes()
     headers = {"Content-Type": "application/octet-stream"}
     if auth:
         headers["Authorization"] = f"token {auth}"
 
-    with open(fpath, "rb") as fid:
-        response = requests.post(
-            upload_url,
-            params={"name": os.path.basename(fpath)},
-            headers=headers,
-            data=fid,
-            timeout=120,
-        )
+    response = requests.post(
+        upload_url,
+        params={"name": os.path.basename(fpath)},
+        headers=headers,
+        data=payload,
+        timeout=120,
+    )
     response.raise_for_status()
 
 
