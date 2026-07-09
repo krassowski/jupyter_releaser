@@ -297,7 +297,7 @@ def create_draft_release(ref="bar", files=None):
             metadata_file = os.path.join(td, "metadata.json")
             with open(metadata_file, "w") as fid:
                 fid.write("{}")
-            util.upload_release_asset(release, metadata_file)
+            util.upload_release_asset(gh, release, metadata_file)
             release = util.release_for_url(gh, release.url)
-        util.upload_assets(gh, files, release, "foo")
+        util.upload_assets(gh, files, release)
     return release

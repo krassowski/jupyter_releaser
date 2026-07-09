@@ -4,6 +4,7 @@
 import atexit
 import hashlib
 import json
+import mimetypes
 import os
 import os.path as osp
 import re
@@ -518,12 +519,12 @@ def fetch_release_asset_data(asset, auth):
     return json.loads(sink.read().decode("utf-8"))
 
 
-def upload_assets(gh, assets, release, auth):  # noqa: ARG001
+def upload_assets(gh, assets, release):
     """Upload assets to a release."""
     log(f"Uploading assets: {assets}")
     asset_shas = {}
     for fpath in assets:
-        upload_release_asset(release, fpath, auth)
+        upload_release_asset(gh, release, fpath)
         asset_shas[os.path.basename(fpath)] = compute_sha256(fpath)
 
     # Create an asset_shas file.
@@ -531,33 +532,36 @@ def upload_assets(gh, assets, release, auth):  # noqa: ARG001
         asset_shas_file = os.path.join(td, "asset_shas.json")
         with open(asset_shas_file, "w") as fid:
             json.dump(asset_shas, fid)
-        upload_release_asset(release, asset_shas_file, auth)
+        upload_release_asset(gh, release, asset_shas_file)
 
     return release
 
 
-def upload_release_asset(release, fpath, auth=None):
-    """Upload a single file to a release upload URL."""
+def upload_release_asset(gh, release, fpath):
+    """Upload a single file to a release.
+
+    ``GhApi.upload_file`` is async-only in ghapi>=2, so we POST to the
+    release's upload URL through the (sync) client's ``__call__``. This is
+    exactly what ``upload_file`` does internally, and reuses the client's
+    transport and auth headers, so no separate ``requests`` call or token
+    is needed.
+    """
     upload_url = str(release.upload_url).split("{", 1)[0]
-    payload = Path(fpath).read_bytes()
-    headers = {"Content-Type": "application/octet-stream"}
-    if auth:
-        headers["Authorization"] = f"token {auth}"
-
-    response = requests.post(
+    mime = mimetypes.guess_type(fpath, False)[0] or "application/octet-stream"
+    gh(
         upload_url,
-        params={"name": os.path.basename(fpath)},
-        headers=headers,
-        data=payload,
-        timeout=120,
+        "POST",
+        headers={"Content-Type": mime},
+        query={"name": os.path.basename(fpath)},
+        data=Path(fpath).read_bytes(),
     )
-    response.raise_for_status()
 
 
-def create_release(gh, tag_name, branch, name, body, draft, prerelease, files=None, auth=None):
+def create_release(gh, tag_name, branch, name, body, draft, prerelease, files=None):
     """Create a release and optionally upload files.
 
-    This avoids ghapi helper methods that became async-only in ghapi>=2.
+    Reimplements ``GhApi.create_release``, which became async-only in ghapi>=2,
+    against the sync client.
     """
     release = gh.repos.create_release(
         tag_name,
@@ -568,12 +572,15 @@ def create_release(gh, tag_name, branch, name, body, draft, prerelease, files=No
         prerelease=prerelease,
     )
     if files:
-        upload_assets(gh, files, release, auth)
+        upload_assets(gh, files, release)
     return release
 
 
 def list_tags(gh, tag_ref):
-    """List tags using the REST endpoint equivalent used by ghapi helper methods."""
+    """List tags matching ``tag_ref``.
+
+    Reimplements ``GhApi.list_tags``, which became async-only in ghapi>=2.
+    """
     return gh.git.list_matching_refs(f"tags/{tag_ref}")
 
 

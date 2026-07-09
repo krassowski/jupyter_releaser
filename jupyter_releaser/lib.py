@@ -126,7 +126,6 @@ def draft_changelog(
             True,
             prerelease,
             files=[metadata_path],
-            auth=auth,
         )
 
     # Remove non-silent draft releases over a day old
@@ -298,7 +297,7 @@ def populate_release(
     )
 
     # Upload the assets to the draft release.
-    release = util.upload_assets(gh, assets, release, auth)
+    release = util.upload_assets(gh, assets, release)
 
     # Set the GitHub action output
     util.actions_output("release_url", release.html_url)
